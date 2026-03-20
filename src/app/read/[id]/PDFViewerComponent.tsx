@@ -43,9 +43,8 @@ export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCov
     };
 
     const defaultLayoutPluginInstance = defaultLayoutPlugin({
-        sidebarTabs: (defaultTabs) => [
-            defaultTabs[0],
-        ],
+        // Sidebar icons ko puri tarah hatane ke liye
+        sidebarTabs: (defaultTabs) => [], 
         renderToolbar: (Toolbar) => (
             <Toolbar>
                 {(props) => {
@@ -62,7 +61,8 @@ export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCov
                         ZoomOut,
                     } = props;
                     return (
-                        <div className="flex items-center justify-between w-full px-2 md:px-4 py-1 bg-[#1a1a1a] border-b border-white/5">
+                        /* pt-12 (padding-top) add kiya hai taaki Back button ke niche Toolbar dikhe */
+                        <div className="flex items-center justify-between w-full px-2 md:px-4 py-1 bg-[#1a1a1a] border-b border-white/5 pt-12 md:pt-1">
                             <div className="flex items-center gap-1 md:gap-2">
                                 <ShowSearchPopover />
                                 <div className="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block" />
@@ -99,9 +99,7 @@ export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCov
                     fileUrl={fileUrl}
                     plugins={[defaultLayoutPluginInstance]}
                     theme="dark"
-                    // Mobile fix: Auto fit to page width
                     defaultScale={SpecialZoomLevel.PageWidth} 
-                    // Mobile fix: Continuous vertical scroll is better
                     scrollMode={ScrollMode.Vertical}
                     initialPage={initialPage}
                     onPageChange={handlePageChange}
@@ -111,17 +109,18 @@ export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCov
             <style jsx global>{`
                 .rpv-core__viewer { background-color: #1a1a1a !important; }
                 .rpv-default-layout__container { border: none !important; }
+                /* Sidebar ko completely gayab karne ke liye */
+                .rpv-default-layout__sidebar { display: none !important; }
+                
                 .rpv-core__inner-pages { 
                     background-color: #121212 !important; 
-                    padding-top: 50px !important; 
+                    padding-top: 10px !important; 
                 }
-                /* Mobile optimized page spacing */
                 .rpv-core__page-layer { 
                     box-shadow: 0 5px 15px rgba(0,0,0,0.5) !important; 
                     margin-bottom: 10px !important; 
                     max-width: 100% !important;
                 }
-                /* Toolbar buttons mobile touch area */
                 .rpv-core__button {
                     padding: 4px !important;
                 }
