@@ -1,25 +1,22 @@
 'use client';
 
-import { Worker, Viewer, PageChangeEvent } from '@react-pdf-viewer/core'; // PageChangeEvent add kiya
+import { Worker, Viewer, PageChangeEvent, SpecialZoomLevel, ScrollMode } from '@react-pdf-viewer/core'; 
 import { defaultLayoutPlugin } from '@react-pdf-viewer/default-layout';
-import { useEffect, useState } from 'react'; // Hooks add kiye
-import { useSearchParams } from 'next/navigation'; // Search params check karne ke liye
+import { useEffect, useState } from 'react'; 
+import { useSearchParams } from 'next/navigation'; 
 
 import '@react-pdf-viewer/core/lib/styles/index.css';
 import '@react-pdf-viewer/default-layout/lib/styles/index.css';
 
-// Props mein book details add ki taaki save kar sakein
 export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCover }: { fileUrl: string, bookId: string, bookTitle: string, bookCover: string }) {
     const searchParams = useSearchParams();
     const [initialPage, setInitialPage] = useState<number | null>(null);
 
     useEffect(() => {
-        // 1. Check if URL has a page (e.g. ?page=5)
         const urlPage = searchParams.get('page');
         if (urlPage) {
             setInitialPage(parseInt(urlPage) - 1);
         } else {
-            // 2. Otherwise check LocalStorage for THIS specific book
             const savedData = localStorage.getItem('ma_continue_reading');
             if (savedData) {
                 const parsed = JSON.parse(savedData);
@@ -34,7 +31,6 @@ export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCov
         }
     }, [bookId, searchParams]);
 
-    // Page change hone par save karne ka function
     const handlePageChange = (e: PageChangeEvent) => {
         const progress = {
             bookId,
@@ -71,12 +67,12 @@ export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCov
                                 <ShowSearchPopover />
                                 <div className="h-4 w-[1px] bg-white/10 mx-1 hidden sm:block" />
                                 <ZoomOut />
-                                <Zoom />
+                                <div className="hidden xs:block"><Zoom /></div>
                                 <ZoomIn />
                             </div>
-                            <div className="flex items-center gap-1 bg-black/20 px-3 py-1 rounded-full border border-white/5">
+                            <div className="flex items-center gap-1 bg-black/20 px-2 md:px-3 py-1 rounded-full border border-white/5 scale-90 md:scale-100">
                                 <GoToPreviousPage />
-                                <div className="flex items-center text-xs text-white/70 font-mono">
+                                <div className="flex items-center text-[10px] md:text-xs text-white/70 font-mono">
                                     <CurrentPageInput /> <span className="mx-1">/</span> <NumberOfPages />
                                 </div>
                                 <GoToNextPage />
@@ -94,19 +90,21 @@ export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCov
         ),
     });
 
-    // Jab tak initialPage decide na ho, render mat karo taaki jump na dikhe
     if (initialPage === null) return null;
 
     return (
-        <div className="h-full w-full">
+        <div className="h-full w-full overflow-hidden">
             <Worker workerUrl="https://unpkg.com/pdfjs-dist@3.11.174/build/pdf.worker.min.js">
                 <Viewer
                     fileUrl={fileUrl}
                     plugins={[defaultLayoutPluginInstance]}
                     theme="dark"
-                    defaultScale={1.0}
-                    initialPage={initialPage} // Auto-resume setting
-                    onPageChange={handlePageChange} // Save progress setting
+                    // Mobile fix: Auto fit to page width
+                    defaultScale={SpecialZoomLevel.PageWidth} 
+                    // Mobile fix: Continuous vertical scroll is better
+                    scrollMode={ScrollMode.Vertical}
+                    initialPage={initialPage}
+                    onPageChange={handlePageChange}
                 />
             </Worker>
             
@@ -115,11 +113,17 @@ export default function PDFViewerComponent({ fileUrl, bookId, bookTitle, bookCov
                 .rpv-default-layout__container { border: none !important; }
                 .rpv-core__inner-pages { 
                     background-color: #121212 !important; 
-                    padding-top: 60px !important; 
+                    padding-top: 50px !important; 
                 }
+                /* Mobile optimized page spacing */
                 .rpv-core__page-layer { 
-                    box-shadow: 0 10px 30px rgba(0,0,0,0.5) !important; 
-                    margin-bottom: 20px !important; 
+                    box-shadow: 0 5px 15px rgba(0,0,0,0.5) !important; 
+                    margin-bottom: 10px !important; 
+                    max-width: 100% !important;
+                }
+                /* Toolbar buttons mobile touch area */
+                .rpv-core__button {
+                    padding: 4px !important;
                 }
             `}</style>
         </div>
