@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
 const ONESIGNAL_APP_ID = "8524acbb-4f3e-4e81-acd6-ecf19b99fd16";
-const ONESIGNAL_REST_KEY = "os_v2_app_quskzo2phzhidlgw5tyzxgp5c3uzzrrkybfe3zvvpky746n7m6vgtrzkyh7iochwu3kvsch6d7rpvzspfc73brgtu3ikdari3rlrxky";
+const ONESIGNAL_REST_KEY = "os_v2_app_quskzo2phzhidlgw5tyzxgp5c2jhcb2gqc3ecrueuhjrv2yvckreevlpkdxu4i7omdg2uydo5s4kxhvrxdzx54hjla6ztvgahvzaqty";
 
 
 // 1. POST: Notification mokalva/schedule karva mate
