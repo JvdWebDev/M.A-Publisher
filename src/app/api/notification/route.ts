@@ -85,13 +85,13 @@ export async function DELETE(request: Request) {
 }
 
 // 4. PUT: Scheduled notification ne EDIT/UPDATE karva mate
+// 4. PUT: Scheduled notification ne EDIT/UPDATE karva mate
 export async function PUT(request: Request) {
   try {
     const { id, title, message, url, schedule_time } = await request.json();
 
-    // OneSignal payload - Title ane Message ne 'en' key ma rakhva jaruri che
     const payload: any = {
-      app_id: process.env.ONESIGNAL_APP_ID,
+      app_id: ONESIGNAL_APP_ID, // process.env kadhi nakho, upar no variable vapro
       headings: { "en": title },
       contents: { "en": message },
       url: url || "",
@@ -99,17 +99,17 @@ export async function PUT(request: Request) {
 
     if (schedule_time) {
       const dateObj = new Date(schedule_time);
-      // OneSignal standard ISO format swikarche
       payload.send_after = dateObj.toISOString();
     }
 
-    const apiUrl = `https://onesignal.com/api/v1/notifications/${id}?app_id=${process.env.ONESIGNAL_APP_ID}`;
+    // Ahiya pan ONESIGNAL_APP_ID variable vapro
+    const apiUrl = `https://onesignal.com/api/v1/notifications/${id}?app_id=${ONESIGNAL_APP_ID}`;
 
     const response = await fetch(apiUrl, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json; charset=utf-8",
-        "Authorization": `Basic ${process.env.ONESIGNAL_REST_KEY}`
+        "Authorization": `Basic ${ONESIGNAL_REST_KEY}` // process.env kadhi nakho
       },
       body: JSON.stringify(payload)
     });
