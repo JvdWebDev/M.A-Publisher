@@ -1,7 +1,7 @@
 import { NextResponse } from 'next/server';
 
-const ONESIGNAL_APP_ID = "8524acbb-4f3e-4e81-acd6-ecf19b99fd16";
-const ONESIGNAL_REST_KEY = "os_v2_app_quskzo2phzhidlgw5tyzxgp5c2jhcb2gqc3ecrueuhjrv2yvckreevlpkdxu4i7omdg2uydo5s4kxhvrxdzx54hjla6ztvgahvzaqty";
+const ONESIGNAL_APP_ID = process.env.ONESIGNAL_APP_ID;
+const ONESIGNAL_REST_KEY = process.env.ONESIGNAL_REST_KEY;
 
 
 // 1. POST: Notification mokalva/schedule karva mate
@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify(payload)
     });
-console.log("Checking Auth Header:", "Basic " + ONESIGNAL_REST_KEY.substring(0, 15) + "...");
+
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error: any) {
