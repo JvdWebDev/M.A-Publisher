@@ -29,7 +29,7 @@ export async function POST(request: Request) {
       },
       body: JSON.stringify(payload)
     });
-
+console.log("Checking Auth Header:", "Basic " + ONESIGNAL_REST_KEY.substring(0, 15) + "...");
     const data = await response.json();
     return NextResponse.json(data);
   } catch (error: any) {
