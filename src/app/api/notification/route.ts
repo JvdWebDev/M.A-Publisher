@@ -7,14 +7,27 @@ const ONESIGNAL_REST_KEY = process.env.ONESIGNAL_REST_KEY;
 // 1. POST: Notification mokalva/schedule karva mate
 export async function POST(request: Request) {
   try {
-    const { title, message, url, schedule_time } = await request.json();
+    const rawBody = await request.json();
+    
+    // વેરસેલ (Vercel) ના કન્સોલમાં ચેક કરવા માટે કે એડમિન પેનલ શું મોકલે છે
+    console.log("--- ADMIN PANEL DATA RECEIVED ---", rawBody);
+
+    const { title, message, url, schedule_time } = rawBody;
+
+    // જો કોઈ ડેટા undefined કે ખાલી આવે, તો ડિફોલ્ટ ટેક્સ્ટ અને લાઈવ સાઈટ સેટ થશે
+    const finalTitle = title || "No Title Provided";
+    const finalMessage = message || "No Message Provided"; 
+    
+    // જો url ખાલી હોય તો તમારી મેઈન સાઈટ જશે, લોકલહોસ્ટ કે વનસિગ્નલની જૂની લિંક નહીં
+    const siteUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://your-live-site.com";
+    const finalUrl = url ? (url.startsWith('http') ? url : `${siteUrl}${url}`) : siteUrl;
 
     const payload: any = {
       app_id: ONESIGNAL_APP_ID,
       included_segments: ["All"],
-      headings: { "en": title },
-      contents: { "en": message },
-      url: url,
+      headings: { "en": finalTitle },
+      contents: { "en": finalMessage },
+      url: finalUrl,
     };
 
     if (schedule_time) {
