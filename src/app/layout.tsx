@@ -47,30 +47,43 @@ export default function RootLayout({
         />
         <Script id="onesignal-init" strategy="afterInteractive">
           {`
-            window.OneSignalDeferred = window.OneSignalDeferred || [];
-            OneSignalDeferred.push(async function(OneSignal) {
-              await OneSignal.init({
-                appId: "8524acbb-4f3e-4e81-acd6-ecf19b99fd16",
-                allowLocalhostAsSecureOrigin: true,
-                serviceWorkerPath: 'OneSignalSDKWorker.js',
-                notifyButton: {
-                  enable: true,
-                  position: 'bottom-left',
-                  size: 'medium',
-                  theme: 'default',
-                  displayPredicate: function() {
-                    return OneSignal.isPushNotificationsEnabled().then(function(isEnabled) {
-                        return !isEnabled;
-                    });
-                  }
-                },
-                welcomeNotification: {
-                  title: "M.A. Publisher",
-                  message: "શુક્રિયા! નોટિફિકેશન સેટ થઈ ગઈ છે."
-                }
-              });
-            });
-          `}
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "8524acbb-4f3e-4e81-acd6-ecf19b99fd16",
+      allowLocalhostAsSecureOrigin: true,
+      serviceWorkerPath: '/OneSignalSDKWorker.js', // આગળ / લગાવ્યો જેથી પાથ સાચો રહે
+      notifyButton: {
+        enable: true,
+        position: 'bottom-left',
+        size: 'medium',
+        theme: 'default',
+        displayPredicate: function() {
+          return OneSignal.isPushNotificationsEnabled().then(function(isEnabled) {
+              return !isEnabled;
+          });
+        }
+      },
+      welcomeNotification: {
+        title: "M.A. Publisher",
+        message: "શુક્રિયા! નોટિફિકેશન સેટ થઈ ગઈ છે."
+      }
+    });
+
+    // --- આ નવો કોડ ઉમેર્યો: ક્લિક કરવા પર સાચી લિંક ઓપન કરવા માટે ---
+    OneSignal.Notifications.addEventListener("click", function(event) {
+      console.log("Notification clicked:", event);
+      
+      // OneSignal માંથી મોકલેલી Launch URL અહીંથી મળશે
+      const launchUrl = event.notification.launchURL;
+      
+      if (launchUrl) {
+        // યુઝરને એ સાચી લિંક પર રીડાયરેક્ટ કરશે
+        window.location.href = launchUrl;
+      }
+    });
+  });
+`}
         </Script>
         {/* --- OneSignal Setup End --- */}
       </head>
