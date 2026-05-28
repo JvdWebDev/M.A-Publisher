@@ -15,7 +15,7 @@ export default function Footer() {
 
         {/* Links Section */}
         <div>
-          <h4 className="text-amber-500 font-bold mb-6 uppercase text-xs tracking-widest">ઝડપી લિંક્સ</h4>
+          <h4 className="text-amber-500 font-bold mb-6 uppercase text-xs tracking-widest">Quick links</h4>
           <ul className="space-y-4 text-sm font-medium">
             <li>
               <Link href="/books" className="hover:text-white transition-colors cursor-pointer">
@@ -39,7 +39,7 @@ export default function Footer() {
         <div>
           <h4 className="text-amber-500 font-bold mb-6 uppercase text-xs tracking-widest">સંપર્ક</h4>
           <p className="text-sm">Bhavnagar, Gujarat, India</p>
-          <p className="text-sm mt-2 font-bold text-white">Email: info@mapublisher.com</p>
+          <p className="text-sm mt-2 font-bold text-white">Email: librarybvn@gmail.com</p>
         </div>
       </div>
 

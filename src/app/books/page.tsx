@@ -24,7 +24,7 @@ export default function BooksPage() {
       const { data, error } = await supabase
         .from('books')
         .select('*')
-        .order('title', { ascending: true });
+        .order('title', { ascending: false });
 
       if (error) throw error;
       if (data) {
